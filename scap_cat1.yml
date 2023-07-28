@@ -1,0 +1,94 @@
+# 
+# 
+# 
+#
+# 
+# 
+# 
+# 
+
+Policy:
+    id: "Security Content Automation Protocol (SCAP)"
+    file: "scap_cat1.yml"
+    name: "Benchmark SCAP CAT 1"
+    description: "SCAP CAT 1"
+    references:
+     - https:// 
+
+    requirements:
+        title: "Check that the Windows platform is Windows 10"
+        description: "Requirements for running the CIS benchmark Domain Controller under Windows 10"
+        condition: all
+        rules:
+         - 'r:HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion -> ProductName -> r:^Windows 10'
+
+    checks:  
+      - id: 220823
+        title: "Solicited Remote Assistance must not be allowed."
+        description: "Remote assistance allows another user to view or take control of the local session of a user.  Solicited assistance is help that is specifically requested by the local user.  This may allow unauthorized parties access to the resources on the computer."
+        rationale: ""
+        remediation: "Configure the policy value for Computer Configuration >> Administrative Templates >> System >> Remote Assistance >> Configure Solicited Remote Assistance to Disabled"
+        compliance: ""
+        condition: all
+        rules:
+         - 'r:HKLM\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services\ -> fAllowToGetHelp -> 0'
+
+      - id: 220827
+        title: "Autoplay must be turned off for non-volume devices."
+        description: "Allowing autoplay to execute may introduce malicious code to a system.  Autoplay begins reading from a drive as soon as you insert media in the drive.  As a result, the setup file of programs or music on audio media may start.  This setting will disable autoplay for non-volume devices (such as Media Transfer Protocol (MTP) devices)."
+        rationale: "If the following registry value does not exist or is not configured as specified, this is a finding"
+        remediation: "Configure the policy value for Computer Configuration >> Administrative Templates >> Windows Components >> AutoPlay Policies >> Disallow Autoplay for non-volume devices to Enabled."
+        compliance: ""
+        condition: all 
+        rules: 
+         - 'r:HKLM\SOFTWARE\Policies\Microsoft\Windows\Explorer\ -> NoAutoplayfornonVolume -> 1'   
+
+      - id: 220828
+        title: "The default autorun behavior must be configured to prevent autorun commands."
+        description: "Allowing autorun commands to execute may introduce malicious code to a system.  Configuring this setting prevents autorun commands from executing."
+        rationale: "If the following registry value does not exist or is not configured as specified, this is a finding"
+        remediation: "Configure the policy value for Computer Configuration >> Administrative Templates >> Windows Components >> AutoPlay Policies >> Set the default behavior for AutoRun to Enabled:Do not execute any autorun commands"
+        compliance: ""
+        condition: all
+        rules:
+         - 'r:HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer\ -> NoAutorun -> 1'
+
+      - id: 220829 
+        title: "Autoplay must be disabled for all drives."
+        description: "Allowing autoplay to execute may introduce malicious code to a system.  Autoplay begins reading from a drive as soon as you insert media in the drive.  As a result, the setup file of programs or music on audio media may start.  By default, autoplay is disabled on removable drives, such as the floppy disk drive (but not the CD-ROM drive) and on network drives.  If you enable this policy, you can also disable autoplay on all drives."
+        rationale: "If the following registry value does not exist or is not configured as specified, this is a finding"
+        remediation: "Configure the policy value for Computer Configuration >> Administrative Templates >> Windows Components >> AutoPlay Policies >> Turn off AutoPlay to Enabled:All Drives."
+        compliance: ""
+        condition: all
+        rules:
+         - 'r:HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\policies\Explorer\ -> NoDriveTypeAutoRun -> 255'
+
+      - id: 220857
+        title: "The Windows Installer Always install with elevated privileges must be disabled."
+        description: "Standard user accounts must not be granted elevated privileges.  Enabling Windows Installer to elevate privileges when installing applications can allow malicious persons and applications to gain full control of a system."
+        rationale: "If the following registry value does not exist or is not configured as specified, this is a finding"
+        remediation: "Configure the policy value for Computer Configuration >> Administrative Templates >> Windows Components >> Windows Installer >> Always install with elevated privileges to Disabled."
+        compliance: ""
+        condition: all
+        rules:
+         - 'r:HKLM\SOFTWARE\Policies\Microsoft\Windows\Installer\ -> AlwaysInstallElevated -> 0'
+      
+      - id: 220862
+        title: "The Windows Remote Management (WinRM) client must not use Basic authentication."
+        description: "Basic authentication uses plain text passwords that could be used to compromise a system."
+        rationale: "If the following registry value does not exist or is not configured as specified, this is a finding"
+        remediation: "Configure the policy value for Computer Configuration >> Administrative Templates >> Windows Components >> Windows Remote Management (WinRM) >> WinRM Client >> 'Allow Basic authentication' to 'Disabled'."
+        compliance: ""
+        condition: all
+        rules:
+         - 'r:HKLM\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client\ -> AllowBasic -> 0'
+      
+      - id: 220865
+        title: "The Windows Remote Management (WinRM) service must not use Basic authentication."
+        description: "Basic authentication uses plain text passwords that could be used to compromise a system."
+        rationale: "If the following registry value does not exist or is not configured as specified, this is a finding"
+        remediation: "Configure the policy value for Computer Configuration >> Administrative Templates >> Windows Components >> Windows Remote Management (WinRM) >> WinRM Service >> Allow Basic authentication to Disabled."
+        compliance: ""
+        condition: all
+        rules:
+         - 'r:HKLM\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service\ -> AllowBasic -> 0'
